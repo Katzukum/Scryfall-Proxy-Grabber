@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="72" y1="72" x2="440" y2="440" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#06101D"/>
+      <stop offset="1" stop-color="#102742"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="124" y1="150" x2="385" y2="353" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A78BFA"/>
+      <stop offset="0.55" stop-color="#60A5FA"/>
+      <stop offset="1" stop-color="#34D399"/>
+    </linearGradient>
+    <filter id="glow" x="86" y="108" width="340" height="296" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="0" stdDeviation="18" flood-color="#38BDF8" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#bg)"/>
+  <g filter="url(#glow)">
+    <rect x="104" y="196" width="96" height="120" rx="22" fill="#F8FAFC"/>
+    <rect x="123" y="222" width="58" height="8" rx="4" fill="#93C5FD"/>
+    <rect x="123" y="240" width="46" height="8" rx="4" fill="#BFDBFE"/>
+    <rect x="123" y="258" width="38" height="8" rx="4" fill="#BFDBFE"/>
+    <path d="M214 255H282" stroke="url(#accent)" stroke-width="18" stroke-linecap="round"/>
+    <path d="M263 219L301 255L263 291" stroke="url(#accent)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="314" y="152" width="94" height="94" rx="22" fill="#0F2A43" stroke="#D9F3FF" stroke-opacity="0.55" stroke-width="10"/>
+    <rect x="314" y="266" width="94" height="94" rx="22" fill="#0F2A43" stroke="#D9F3FF" stroke-opacity="0.55" stroke-width="10"/>
+    <path d="M335 198H387M361 172V224" stroke="#E0F2FE" stroke-width="10" stroke-linecap="round"/>
+    <path d="M340 294H382" stroke="#E0F2FE" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="152" cy="255" r="44" stroke="rgba(217,243,255,0.14)" stroke-width="12"/>
+    <circle cx="361" cy="198" r="54" stroke="rgba(217,243,255,0.1)" stroke-width="12"/>
+    <circle cx="361" cy="313" r="54" stroke="rgba(217,243,255,0.1)" stroke-width="12"/>
+  </g>
+</svg>

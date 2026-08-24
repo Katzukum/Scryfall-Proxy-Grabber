@@ -1,0 +1,23 @@
+site_name: ProxyToolBox
+theme:
+  name: material
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+nav:
+  - Home: index.md
+  - Tutorials:
+    - Getting Started: tutorials/getting_started.md
+  - How-To Guides:
+    - Customizing Print Settings: how_to/customizing_print_settings.md
+    - Add a New Tab: how_to/add_a_new_tab.md
+  - Explanation:
+    - Architecture Overview: explanation/architecture.md
+  - API Reference:
+    - Models: api/models.md
+    - Downloader: api/downloader.md
+    - Print Setup: api/print_setup.md
+    - Card Lookup: api/card_lookup.md
+    - Backend API: api/api.md

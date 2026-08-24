@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="84" y1="72" x2="420" y2="440" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#132238"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="132" y1="124" x2="379" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5EEAD4"/>
+      <stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+    <filter id="shadow" x="52" y="52" width="408" height="408" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#020617" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#bg)"/>
+  <g filter="url(#shadow)">
+    <path d="M256 84L378 132V236C378 318 325 390 256 428C187 390 134 318 134 236V132L256 84Z" fill="url(#accent)"/>
+    <path d="M256 119L344 154V231C344 291 307 347 256 380C205 347 168 291 168 231V154L256 119Z" fill="#E6F6FF" fill-opacity="0.95"/>
+    <path d="M287.308 179.351C279.13 171.172 265.869 171.172 257.691 179.351L224.412 212.63C216.958 220.084 216.22 231.879 222.198 240.178L196.755 265.621C191.461 270.915 191.461 279.498 196.755 284.792C202.048 290.085 210.632 290.085 215.925 284.792L241.368 259.349C249.667 265.327 261.462 264.589 268.916 257.135L302.195 223.856C310.374 215.678 310.374 202.417 302.195 194.238L287.308 179.351Z" fill="#0F172A"/>
+    <path d="M279.689 205.07L276.323 201.704C272.949 198.33 267.479 198.33 264.105 201.704L247.777 218.032C244.403 221.406 244.403 226.876 247.777 230.25L251.143 233.616C254.517 236.99 259.988 236.99 263.361 233.616L279.689 217.288C283.063 213.915 283.063 208.444 279.689 205.07Z" fill="url(#accent)"/>
+    <circle cx="199" cy="282" r="14" fill="#0F172A"/>
+  </g>
+</svg>
