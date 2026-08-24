@@ -28,8 +28,8 @@ if not exist "frontend\package.json" (
   exit /b 1
 )
 
-echo APP_VERSION = "%APP_VERSION%" > "src\app_version.py"
-echo export const APP_VERSION = "%APP_VERSION%" ^; > "frontend\src\version.ts"
+> "src\app_version.py" echo APP_VERSION = "%APP_VERSION%"
+> "frontend\src\version.ts" echo export const APP_VERSION = "%APP_VERSION%"^;
 
 echo [INFO] Building frontend for version %APP_VERSION%...
 call ".venv\Scripts\activate.bat"
