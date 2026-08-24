@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Download, Loader2 } from "lucide-react"
+import { Download, FolderOpen, Loader2 } from "lucide-react"
 
 import { usePywebview } from "@/hooks/usePywebview"
 import { Button } from "@/components/ui/button"
@@ -72,17 +72,39 @@ export function DownloaderTab({ onDownloadComplete }: DownloaderTabProps) {
     });
   }
 
+  const handleBrowseFolder = async () => {
+    if (!api) return
+
+    try {
+      const selectedFolder = await api.browse_folder()
+      if (selectedFolder) setOrderName(selectedFolder)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6 p-1 h-full">
       <div className="space-y-3 shrink-0">
         <Label htmlFor="order-name">Order / Folder Name</Label>
-        <Input 
-          id="order-name" 
-          value={orderName} 
-          onChange={(e) => setOrderName(e.target.value)} 
-          placeholder="e.g. Modern_Burn"
-          disabled={isDownloading}
-        />
+        <div className="flex gap-2">
+          <Input
+            id="order-name"
+            value={orderName}
+            onChange={(e) => setOrderName(e.target.value)}
+            placeholder="e.g. Modern_Burn or select a folder"
+            disabled={isDownloading}
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={handleBrowseFolder}
+            disabled={isDownloading || !api}
+          >
+            <FolderOpen className="mr-2 h-4 w-4" />
+            Browse
+          </Button>
+        </div>
       </div>
       
       <div className="flex flex-row gap-4 flex-1 min-h-0">

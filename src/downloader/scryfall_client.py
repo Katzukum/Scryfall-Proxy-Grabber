@@ -145,7 +145,9 @@ async def download_card_images(
                                 if not dual_face_token:
                                     await _process_card(client, token_card, 1, order_name, on_log)
                                 else:
-                                    await _process_token_dual_face(client, token_card, token_pair_idx, order_name, on_log)
+                                    await _process_token_dual_face(
+                                        client, token_card, token_pair_idx, order_name, on_log
+                                    )
                                     token_pair_idx += 1
 
                                 token_downloaded_count += 1
@@ -204,24 +206,30 @@ async def _process_card(
     """Process a single card from the API response and create any requested copies."""
     images_to_download: list[dict] = []
     output_dir = order_name
-    has_faces = "card_faces" in card
     set_code = card["set"]
     col_num = card["collector_number"]
+    top_level_image_url = (card.get("image_uris") or {}).get("large")
+    face_images = [
+        {
+            "url": face["image_uris"]["large"],
+            "name": face["name"],
+            "face_index": face_index,
+        }
+        for face_index, face in enumerate(card.get("card_faces", []), start=1)
+        if (face.get("image_uris") or {}).get("large")
+    ]
+    is_transformer = not top_level_image_url and bool(face_images)
 
-    if has_faces:
+    if top_level_image_url:
+        images_to_download.append({"url": top_level_image_url, "name": card["name"]})
+    elif face_images:
         output_dir = os.path.join(order_name, "transformers")
         os.makedirs(output_dir, exist_ok=True)
-        for face_index, face in enumerate(card["card_faces"], start=1):
-            if "image_uris" in face and "large" in face["image_uris"]:
-                images_to_download.append(
-                    {"url": face["image_uris"]["large"], "name": face["name"], "face_index": face_index}
-                )
-    elif "image_uris" in card and "large" in card["image_uris"]:
-        images_to_download.append({"url": card["image_uris"]["large"], "name": card["name"]})
+        images_to_download.extend(face_images)
     else:
         raise ValueError(f"No image URI found for card: {card.get('name', 'Unknown')}")
 
-    if has_faces:
+    if is_transformer:
         first_copy_group_id = build_transformer_group_id(set_code, col_num, 1)
         first_copy_files: dict[int, tuple[str, str]] = {}
 
@@ -299,14 +307,17 @@ async def _process_token_dual_face(
     face_num = 1 if idx % 2 != 0 else 2
 
     images_to_download: list[dict] = []
-    has_faces = "card_faces" in card
-    if has_faces:
-        face = card["card_faces"][0]
-        if "image_uris" in face and "large" in face["image_uris"]:
-            images_to_download.append({"url": face["image_uris"]["large"], "name": face["name"]})
-    elif "image_uris" in card and "large" in card["image_uris"]:
-        images_to_download.append({"url": card["image_uris"]["large"], "name": card["name"]})
+    top_level_image_url = (card.get("image_uris") or {}).get("large")
+    if top_level_image_url:
+        images_to_download.append({"url": top_level_image_url, "name": card["name"]})
     else:
+        for face in card.get("card_faces", []):
+            face_image_url = (face.get("image_uris") or {}).get("large")
+            if face_image_url:
+                images_to_download.append({"url": face_image_url, "name": face["name"]})
+                break
+
+    if not images_to_download:
         raise ValueError(f"No image URI found for token: {card.get('name', 'Unknown')}")
 
     for img_info in images_to_download:
@@ -325,7 +336,9 @@ def _generate_blank_png(filepath: str) -> None:
     """Generate a 1x1 transparent PNG for completing odd token pairs."""
     import base64
 
-    transparent_png_b64 = b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+    transparent_png_b64 = (
+        b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+    )
     content = base64.b64decode(transparent_png_b64)
     with open(filepath, "wb") as f:
         f.write(content)
