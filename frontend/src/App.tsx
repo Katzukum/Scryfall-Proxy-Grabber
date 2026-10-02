@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { DownloadCloud, FileOutput, SearchCheck } from "lucide-react"
+import { DownloadCloud, FileOutput, SearchCheck, WandSparkles } from "lucide-react"
 
 import { usePywebview } from "@/hooks/usePywebview"
 import { AppHeader } from "@/components/layout/AppHeader"
@@ -8,6 +8,7 @@ import { ProgressBar } from "@/components/layout/ProgressBar"
 import { DownloaderTab } from "@/components/downloader/DownloaderTab"
 import { PrintSetupTab } from "@/components/print-setup/PrintSetupTab"
 import { CardLookupTab } from "@/components/card-lookup/CardLookupTab"
+import { DeckThemeTab } from "@/components/deck-theme/DeckThemeTab"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
       <main className="flex-1 p-6 flex flex-col gap-6 overflow-hidden min-h-0">
         <div className="flex-1 overflow-hidden">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-            <TabsList className="grid w-full grid-cols-3 mb-6 bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 shrink-0">
+            <TabsList className="grid w-full grid-cols-4 mb-6 bg-zinc-100/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 shrink-0">
               <TabsTrigger value="downloader" className="flex items-center gap-2">
                 <DownloadCloud className="w-4 h-4" /> Download Cards
               </TabsTrigger>
@@ -46,6 +47,9 @@ function App() {
               </TabsTrigger>
               <TabsTrigger value="lookup" className="flex items-center gap-2">
                 <SearchCheck className="w-4 h-4" /> Card Lookup
+              </TabsTrigger>
+              <TabsTrigger value="theme" className="flex items-center gap-2">
+                <WandSparkles className="w-4 h-4" /> DeckTheme
               </TabsTrigger>
             </TabsList>
             
@@ -58,6 +62,9 @@ function App() {
               </TabsContent>
               <TabsContent value="lookup" className="m-0 h-full p-4 overflow-y-auto w-full">
                 <CardLookupTab />
+              </TabsContent>
+              <TabsContent value="theme" forceMount className="m-0 h-full p-4 overflow-y-auto w-full data-[state=inactive]:hidden">
+                <DeckThemeTab onUseInPrint={(folder) => { setPrintFolderPath(folder); setActiveTab("print"); }} />
               </TabsContent>
             </div>
           </Tabs>

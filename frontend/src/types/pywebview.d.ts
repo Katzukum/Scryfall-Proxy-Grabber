@@ -1,5 +1,7 @@
+import type { ThemeCard, ThemeEditOptions, ThemeJob, ThemeStatus } from './deck-theme';
+
 export interface CardEntry {
-  quantity: int;
+  quantity: number;
   name: string;
   set_code: string;
   collector_number: string;
@@ -16,6 +18,17 @@ export interface PrintSettings {
 }
 
 export interface PywebviewApi {
+  deck_theme_status(): Promise<ThemeStatus>;
+  deck_theme_prepare_card(rawCard: Record<string, unknown>, faceIndex: number): Promise<ThemeCard>;
+  deck_theme_import_image(): Promise<ThemeCard | null>;
+  deck_theme_build_prompt(cardId: string, theme: string): Promise<string>;
+  deck_theme_start_download(group: 'editor' | 'enhancer'): Promise<ThemeJob>;
+  deck_theme_start_enhance(cardId: string, theme: string, prompt: string, device: 'auto' | 'cpu'): Promise<ThemeJob>;
+  deck_theme_start_edit(options: ThemeEditOptions): Promise<ThemeJob>;
+  deck_theme_job(): Promise<ThemeJob | null>;
+  deck_theme_cancel(): Promise<void>;
+  deck_theme_release_memory(): Promise<void>;
+  deck_theme_save_result(jobId: string): Promise<string | null>;
   // Downloader
   start_download(order_name: string, card_list_text: string, include_tokens?: boolean, dual_face_token?: boolean): Promise<void>;
   get_error_cards(order_name: string): Promise<string[]>;

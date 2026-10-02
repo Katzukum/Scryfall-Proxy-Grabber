@@ -1,6 +1,7 @@
 """pywebview JS API class — bridges all backend modules to the frontend."""
 
 import asyncio
+import json
 import os
 import re
 import threading
@@ -19,6 +20,7 @@ from src.card_lookup.scryfall_search import (
     search_card_by_name,
     lookup_card_by_set,
 )
+from src.deck_theme.service import DeckThemeService
 
 
 class Api:
@@ -26,6 +28,7 @@ class Api:
 
     def __init__(self) -> None:
         self._window: webview.Window | None = None
+        self._deck_theme = DeckThemeService(on_log=self._push_log)
 
     def set_window(self, window: webview.Window) -> None:
         """Set the webview window reference for JS callbacks."""
@@ -36,8 +39,62 @@ class Api:
     def _push_log(self, level: str, message: str) -> None:
         """Push a log message to the frontend."""
         if self._window:
-            safe_msg = message.replace("\\", "\\\\").replace("'", "\\'").replace("\n", "\\n")
-            self._window.evaluate_js(f"window.__pushLog && window.__pushLog('{level}', '{safe_msg}')")
+            self._window.evaluate_js(
+                f"window.__pushLog && window.__pushLog({json.dumps(level)}, {json.dumps(message)})"
+            )
+
+    # --- DeckTheme Tab (independent job status; no shared task-completion callback) ---
+
+    def deck_theme_status(self) -> dict:
+        return self._deck_theme.status()
+
+    def deck_theme_prepare_card(self, raw_card: dict, face_index: int = 0) -> dict:
+        return self._deck_theme.prepare_card(raw_card, face_index)
+
+    def deck_theme_import_image(self) -> dict | None:
+        if not self._window:
+            return None
+        selected = self._window.create_file_dialog(
+            webview.OPEN_DIALOG, allow_multiple=False,
+            file_types=("Card images (*.png;*.jpg;*.jpeg;*.webp)",),
+        )
+        return self._deck_theme.import_image(selected[0]) if selected else None
+
+    def deck_theme_build_prompt(self, card_id: str, theme: str) -> str:
+        return self._deck_theme.build_prompt(card_id, theme)
+
+    def deck_theme_start_download(self, group: str) -> dict:
+        return self._deck_theme.start_download(group)
+
+    def deck_theme_start_enhance(self, card_id: str, theme: str, prompt: str, device: str = "auto") -> dict:
+        return self._deck_theme.start_enhance(card_id, theme, prompt, device)
+
+    def deck_theme_start_edit(self, options: dict) -> dict:
+        return self._deck_theme.start_edit(options)
+
+    def deck_theme_job(self) -> dict | None:
+        return self._deck_theme.job()
+
+    def deck_theme_cancel(self) -> None:
+        self._deck_theme.cancel()
+
+    def deck_theme_release_memory(self) -> None:
+        self._deck_theme.release_memory()
+
+    def deck_theme_save_result(self, job_id: str) -> str | None:
+        source = self._deck_theme.result_path(job_id)
+        if not self._window:
+            return None
+        selected = self._window.create_file_dialog(
+            webview.SAVE_DIALOG, save_filename=source.name, file_types=("PNG image (*.png)",),
+        )
+        if not selected:
+            return None
+        destination = selected[0] if isinstance(selected, (tuple, list)) else selected
+        return self._deck_theme.save_result(job_id, destination)
+
+    def shutdown(self) -> None:
+        self._deck_theme.shutdown()
 
     def _push_progress(self, current: int, total: int, label: str) -> None:
         """Push a progress update to the frontend."""

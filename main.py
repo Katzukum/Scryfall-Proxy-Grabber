@@ -3,6 +3,11 @@ import sys
 import ctypes
 from pathlib import Path
 
+if "--deck-theme-worker" in sys.argv:
+    from src.deck_theme.native_worker import main as run_deck_theme_worker
+
+    raise SystemExit(run_deck_theme_worker())
+
 import webview
 
 from src.api import Api
@@ -83,6 +88,7 @@ def main() -> None:
     )
 
     window.events.shown += lambda: _set_native_window_icon(window, str(icon_path))
+    window.events.closed += api.shutdown
     api.set_window(window)
     webview.start(debug=dev_mode)
 

@@ -11,6 +11,7 @@ nav:
   - Tutorials:
     - Getting Started: tutorials/getting_started.md
   - How-To Guides:
+    - Testing DeckTheme: how_to/deck_theme.md
     - Customizing Print Settings: how_to/customizing_print_settings.md
     - Add a New Tab: how_to/add_a_new_tab.md
   - Explanation:

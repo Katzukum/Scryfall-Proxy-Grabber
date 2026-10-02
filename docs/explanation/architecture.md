@@ -24,3 +24,12 @@ Written in Python >3.11, the actual work is split into modular domains.
 - **Card Lookup (`src.card_lookup`)**: Uses `httpx` to ping Scryfall. Supports fuzzy searching, exact searches (Set Code + Collector Number), and autocomplete features.
 - **Downloader (`src.downloader`)**: Parses Moxfield list text files, batches identification requests for Scryfall Collections API limits securely, checks for token existence, manages image downloading asynchronously via asyncio, and organizes images in numbered sequences inside the set directory.
 - **Print Setup (`src.print_setup`)**: Renders images using reportlab or the Pillow library. Responsible for gridding cards out on sheet configurations, adding margins and bleeds, and keeping track of standard and double-sided "transformer" layouts.
+- **DeckTheme (`src.deck_theme`)**: Maintains a separate single-job queue with polling, cancellation, card/image preparation,
+  and provenance. The asset manager verifies pinned model/runtime downloads. Native stable-diffusion.cpp and llama.cpp workers run as
+  hidden child processes owned by the application. The editor retains its native context behind private process pipes
+  until cancellation, shutdown, another inference stage, explicit unload, or a five-minute idle timeout. The prompt
+  enhancer is unloaded after use. Automatic processing permits GPU acceleration for both stages:
+  llama.cpp fits model layers and the vision projector to available memory, while stable-diffusion.cpp uses native
+  automatic fitting for all image-editing stages and enables VAE tiling when needed for memory. Explicit CPU processing
+  keeps both operations on CPU. Vulkan/prompt runtime files ship inside release builds; compatible NVIDIA systems
+  acquire an internal CUDA editor runtime automatically. Models remain in the user's local data folder.

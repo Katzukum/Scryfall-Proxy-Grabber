@@ -50,6 +50,25 @@ The packaged `.exe` is portable: place it in the folder where you want to work a
 - Shows card imagery and raw Scryfall data.
 - Downloads an individual printing directly from its detail view.
 
+### DeckTheme (Single Card preview)
+
+- Select a Scryfall printing and card face, or import a local card image.
+- Enter a theme and build an editable prompt from card metadata.
+- Optionally enhance the prompt with an image-aware local model.
+- Use Automatic processing to fit enhancement and image editing to available GPU memory, or explicitly select CPU.
+- Run Qwen Image 2.1 locally with automatic CUDA selection on compatible NVIDIA GPUs and Vulkan elsewhere.
+- Download and verify models in the app, cancel work, and resume partial downloads.
+- Compare the original and edited image, save a copy, or send the result to Print Setup.
+- The Deck subtab is reserved for future batch generation.
+
+The initial integration supports Windows x64. The INT8 image editor needs about **14.1 GB of model downloads**;
+the optional prompt enhancer adds about **6.9 GB**. These are disk sizes, not VRAM requirements.
+Models are stored under `%LOCALAPPDATA%/ProxyToolBox/deck-theme`. No ComfyUI installation is used.
+Only one DeckTheme job runs at a time. The editor stays loaded for faster repeat generations, with a memory-release
+button and a five-minute idle timeout. NVIDIA acceleration may require a one-time internal runtime download of about
+900 MB; no CUDA Toolkit installation is needed. Actual speed and memory use depend on the target hardware.
+See [Testing DeckTheme](docs/how_to/deck_theme.md) for setup, memory considerations, and current limitations.
+
 ### Desktop experience
 
 - Modern React interface hosted in a native pywebview window.
@@ -154,6 +173,8 @@ python main.py --dev
 ```
 
 The builder prompts for a version, compiles the frontend, packages the app with PyInstaller, and writes `ProxyToolBox-v<version>.exe` to `release/`.
+It also stages verified native DeckTheme engines before packaging; model weights are downloaded later from inside the app.
+For a direct PyInstaller build, first run `python scripts/prepare_deck_theme_runtimes.py`.
 
 ## Architecture
 

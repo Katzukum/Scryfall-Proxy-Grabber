@@ -13,7 +13,18 @@ frontend/dist/
 # Application build and release output
 build/
 release/
+assets/deck-theme-runtimes/
 Old Version/
+
+# Downloaded AI model weights (installed separately by DeckTheme)
+models/
+*.safetensors
+*.gguf
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.bin
 
 # Generated documentation
 site/

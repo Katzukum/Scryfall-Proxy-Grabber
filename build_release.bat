@@ -42,6 +42,14 @@ if errorlevel 1 (
 )
 cd /d "%~dp0"
 
+echo [INFO] Preparing bundled DeckTheme engines...
+call ".venv\Scripts\python.exe" "scripts\prepare_deck_theme_runtimes.py"
+if errorlevel 1 (
+  echo [ERROR] DeckTheme engine preparation failed.
+  pause
+  exit /b 1
+)
+
 call ".venv\Scripts\python.exe" -m PyInstaller --version >nul 2>&1
 if errorlevel 1 (
   echo [INFO] PyInstaller not found. Installing it into the virtual environment...
